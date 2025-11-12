@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人学术主页</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>🧠</span>
+                <span>学术主页</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#research">研究</a></li>
+                <li><a href="#publications">成果</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页部分 -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="profile-image">
+                <div class="image-placeholder">
+                    <span>个人照片</span>
+                </div>
+            </div>
+            <h1>张三 博士</h1>
+            <p class="title">医学影像与人工智能研究员</p>
+            <p class="description">专注于磁共振成像技术与临床应用研究</p>
+            <button class="cta-button" onclick="scrollToSection('about')">了解更多</button>
+        </div>
+    </section>
+
+    <!-- 关于我部分 -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>关于我</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>我是某某大学医学影像系的博士研究员，主要研究方向为医学影像处理与人工智能算法开发。</p>
+                    <p>在磁共振成像技术和深度学习应用方面有丰富的研究经验，发表多篇高水平学术论文。</p>
+                    <div class="skills">
+                        <h3>专业技能</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">医学影像分析</span>
+                            <span class="skill-tag">深度学习</span>
+                            <span class="skill-tag">MRI序列开发</span>
+                            <span class="skill-tag">Python编程</span>
+                            <span class="skill-tag">数据可视化</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 研究兴趣部分 -->
+    <section id="research" class="research">
+        <div class="container">
+            <h2>研究兴趣</h2>
+            <div class="research-grid">
+                <div class="research-card">
+                    <div class="research-icon">🧠</div>
+                    <h3>磁共振成像</h3>
+                    <p>高场强MRI序列开发、快速成像技术、定量磁共振参数映射</p>
+                </div>
+                <div class="research-card">
+                    <div class="research-icon">🤖</div>
+                    <h3>人工智能</h3>
+                    <p>深度学习在医学影像分析中的应用、图像分割、病灶检测与分类</p>
+                </div>
+                <div class="research-card">
+                    <div class="research-icon">🔬</div>
+                    <h3>临床应用</h3>
+                    <p>神经系统疾病诊断、肿瘤影像学评估、治疗反应监测</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学术成果部分 -->
+    <section id="publications" class="publications">
+        <div class="container">
+            <h2>学术成果</h2>
+            <div class="publication-list">
+                <div class="publication-item">
+                    <h3>基于深度学习的脑肿瘤MRI自动分割方法</h3>
+                    <p class="authors">张三, 李四, 王五</p>
+                    <p class="journal">Medical Image Analysis, 2023</p>
+                    <div class="publication-links">
+                        <a href="#" class="link-button">PDF</a>
+                        <a href="#" class="link-button">DOI</a>
+                    </div>
+                </div>
+                <div class="publication-item">
+                    <h3>多模态MRI在阿尔茨海默病早期诊断中的应用</h3>
+                    <p class="authors">张三, 赵六, 钱七</p>
+                    <p class="journal">NeuroImage, 2022</p>
+                    <div class="publication-links">
+                        <a href="#" class="link-button">PDF</a>
+                        <a href="#" class="link-button">DOI</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 知识图谱部分 -->
+    <section id="knowledge-graph" class="knowledge-graph">
+        <div class="container">
+            <h2>医学影像知识图谱</h2>
+            <div class="graph-container">
+                <div id="graph" class="graph"></div>
+                <div class="graph-controls">
+                    <button onclick="resetGraph()">重置视图</button>
+                    <button onclick="zoomIn()">放大</button>
+                    <button onclick="zoomOut()">缩小</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系部分 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>联系方式</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-icon">📧</span>
+                    <span>email@example.com</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🏢</span>
+                    <span>某某大学医学影像系</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">🔗</span>
+                    <a href="#">Google Scholar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 个人学术主页. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
