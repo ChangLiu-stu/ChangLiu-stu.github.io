@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // 如果是技能条，触发动画
                 if (entry.target.classList.contains('skill-category')) {
-                    animateSkills();
+                    setTimeout(() => {
+                        animateSkills();
+                    }, 300);
                 }
             }
         });
@@ -94,10 +96,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 生成知识图谱可视化
-    createKnowledgeGraph();
+    try {
+        createKnowledgeGraph();
+    } catch (error) {
+        console.error('知识图谱初始化失败:', error);
+        const graphArea = document.getElementById('graphArea');
+        if (graphArea) {
+            graphArea.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #666;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>知识图谱加载失败，请刷新页面重试</p>
+                    <small>错误信息: ${error.message}</small>
+                </div>
+            `;
+        }
+    }
     
-    // 初始化技能条动画
-    animateSkills();
+    // 初始化技能条动画（确保页面加载时显示）
+    setTimeout(() => {
+        animateSkills();
+    }, 500);
 });
 
 // 照片加载错误处理函数
@@ -121,6 +139,7 @@ function animateSkills() {
 // 创建知识图谱可视化
 function createKnowledgeGraph() {
     const graphArea = document.getElementById('graphArea');
+    if (!graphArea) return;
     
     // 清除现有内容
     graphArea.innerHTML = '';
@@ -180,6 +199,7 @@ function createKnowledgeGraph() {
 // 创建节点间的连线
 function createConnections(nodes) {
     const graphArea = document.getElementById('graphArea');
+    if (!graphArea) return;
     
     // 创建SVG容器用于连线
     const svgNS = "http://www.w3.org/2000/svg";
@@ -195,46 +215,13 @@ function createConnections(nodes) {
     graphArea.appendChild(svg);
     
     // 绘制连线
-    nodes.forEach(node => {
-        if (node.connections && node.connections.length > 0) {
-            const fromElement = document.querySelector(`.graph-node[data-id="${node.id}"]`);
-            if (!fromElement) return;
-            
-            const fromRect = fromElement.getBoundingClientRect();
-            const graphRect = graphArea.getBoundingClientRect();
-            
-            const fromX = fromRect.left - graphRect.left + fromRect.width / 2;
-            const fromY = fromRect.top - graphRect.top + fromRect.height / 2;
-            
-            node.connections.forEach(connectionId => {
-                const toElement = document.querySelector(`.graph-node[data-id="${connectionId}"]`);
-                if (!toElement) return;
-                
-                const toRect = toElement.getBoundingClientRect();
-                const toX = toRect.left - graphRect.left + toRect.width / 2;
-                const toY = toRect.top - graphRect.top + toRect.height / 2;
-                
-                const line = document.createElementNS(svgNS, "line");
-                line.setAttribute("x1", fromX);
-                line.setAttribute("y1", fromY);
-                line.setAttribute("x2", toX);
-                line.setAttribute("y2", toY");
-                line.setAttribute("stroke", "rgba(74, 144, 226, 0.5)");
-                line.setAttribute("stroke-width", "2");
-                
-                svg.appendChild(line);
-            });
-        }
-    });
-    
-    // 更新函数，当节点移动时重新绘制连线
-    window.updateConnections = function() {
+    function drawConnections() {
         // 清除现有连线
         while (svg.firstChild) {
             svg.removeChild(svg.firstChild);
         }
         
-        // 重新绘制所有连线
+        // 绘制所有连线
         nodes.forEach(node => {
             if (node.connections && node.connections.length > 0) {
                 const fromElement = document.querySelector(`.graph-node[data-id="${node.id}"]`);
@@ -266,7 +253,13 @@ function createConnections(nodes) {
                 });
             }
         });
-    };
+    }
+    
+    // 初始绘制
+    drawConnections();
+    
+    // 更新函数，当节点移动时重新绘制连线
+    window.updateConnections = drawConnections;
 }
 
 // 使节点可拖动
@@ -315,48 +308,69 @@ function makeDraggable(element) {
 // 设置图谱控制功能
 function setupGraphControls() {
     const graphArea = document.getElementById('graphArea');
+    if (!graphArea) return;
+    
     let scale = 1;
     
-    document.getElementById('zoomIn').addEventListener('click', function() {
-        scale = Math.min(scale * 1.2, 3);
-        graphArea.style.transform = `scale(${scale})`;
-    });
+    const zoomInBtn = document.getElementById('zoomIn');
+    const zoomOutBtn = document.getElementById('zoomOut');
+    const resetViewBtn = document.getElementById('resetView');
+    const layoutVerticalBtn = document.getElementById('layoutVertical');
+    const layoutHorizontalBtn = document.getElementById('layoutHorizontal');
+    const layoutCircularBtn = document.getElementById('layoutCircular');
     
-    document.getElementById('zoomOut').addEventListener('click', function() {
-        scale = Math.max(scale / 1.2, 0.5);
-        graphArea.style.transform = `scale(${scale})`;
-    });
-    
-    document.getElementById('resetView').addEventListener('click', function() {
-        scale = 1;
-        graphArea.style.transform = `scale(${scale})`;
-        
-        // 重置所有节点位置
-        const nodes = document.querySelectorAll('.graph-node');
-        nodes.forEach(node => {
-            node.style.top = '';
-            node.style.left = '';
-            node.style.transform = '';
+    if (zoomInBtn) {
+        zoomInBtn.addEventListener('click', function() {
+            scale = Math.min(scale * 1.2, 3);
+            graphArea.style.transform = `scale(${scale})`;
         });
-        
-        // 更新连线
-        if (window.updateConnections) {
-            window.updateConnections();
-        }
-    });
+    }
+    
+    if (zoomOutBtn) {
+        zoomOutBtn.addEventListener('click', function() {
+            scale = Math.max(scale / 1.2, 0.5);
+            graphArea.style.transform = `scale(${scale})`;
+        });
+    }
+    
+    if (resetViewBtn) {
+        resetViewBtn.addEventListener('click', function() {
+            scale = 1;
+            graphArea.style.transform = `scale(${scale})`;
+            
+            // 重置所有节点位置
+            const nodes = document.querySelectorAll('.graph-node');
+            nodes.forEach(node => {
+                node.style.top = '';
+                node.style.left = '';
+                node.style.transform = '';
+            });
+            
+            // 更新连线
+            if (window.updateConnections) {
+                window.updateConnections();
+            }
+        });
+    }
     
     // 布局功能
-    document.getElementById('layoutVertical').addEventListener('click', function() {
-        applyVerticalLayout();
-    });
+    if (layoutVerticalBtn) {
+        layoutVerticalBtn.addEventListener('click', function() {
+            applyVerticalLayout();
+        });
+    }
     
-    document.getElementById('layoutHorizontal').addEventListener('click', function() {
-        applyHorizontalLayout();
-    });
+    if (layoutHorizontalBtn) {
+        layoutHorizontalBtn.addEventListener('click', function() {
+            applyHorizontalLayout();
+        });
+    }
     
-    document.getElementById('layoutCircular').addEventListener('click', function() {
-        applyCircularLayout();
-    });
+    if (layoutCircularBtn) {
+        layoutCircularBtn.addEventListener('click', function() {
+            applyCircularLayout();
+        });
+    }
 }
 
 // 垂直布局
@@ -468,7 +482,7 @@ function applyCircularLayout() {
         { id: 'quantitative' }
     ];
     
-    nodes.forEach((node, index) {
+    nodes.forEach((node, index) => {
         const element = document.querySelector(`.graph-node[data-id="${node.id}"]`);
         if (element) {
             const angle = (index / nodes.length) * 2 * Math.PI;

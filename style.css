@@ -881,3 +881,45 @@ footer {
         align-items: center;
     }
 }
+/* 修复：确保内容立即显示 */
+.fade-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* 修复技能条显示 */
+.skill-level {
+    width: var(--target-width, 0) !important;
+}
+
+/* 确保技能条动画正常工作 */
+.skill-category.visible .skill-level {
+    transition: width 1s ease !important;
+}
+
+/* 修复知识图谱节点显示 */
+.graph-node {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* 确保所有内容区域可见 */
+.education,
+.research-interests,
+.skills,
+.knowledge-graph {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* 修复时间线显示 */
+.timeline-content {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* 修复研究兴趣卡片显示 */
+.interest-card {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
